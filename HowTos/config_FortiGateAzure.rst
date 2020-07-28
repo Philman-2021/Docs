@@ -96,10 +96,10 @@ Those static routes could also be reviewed on the page "Dashboard -> Network -> 
 |az_fortigate_static_routes_review|
 
 
-7. Configure basic traffic policy to allow traffic VPC to VPC
+7. Configure basic traffic policy to allow traffic VNet to VNet
 -------------------------------------------------------------------------
 
-In this step, we will configure a basic traffic security policy that allows traffic to pass through the firewall. Given that Aviatrix gateways will only forward traffic from the TGW to the LAN port of the Firewall, we can simply set our policy condition to match any packet that is going in/out of LAN interface.
+In this step, we will configure a basic traffic security policy that allows traffic to pass through the firewall. Given that Aviatrix gateways will only forward traffic to the LAN port of the Firewall, we can simply set our policy condition to match any packet that is going in/out of the LAN interface.
 
 Go to the page "Policy & Objects -> Firewall Policy -> Create New / Edit" to configure policy as the following screenshot.
 
@@ -121,7 +121,7 @@ NAT                 Disabled
 
 After validating that your traffic is being routed through your firewall instances, you can customize the security policy to tailor to your requirements.
 
-8. [Optional] Configure basic traffic policy to allow traffic VPC to Internet
+8. [Optional] Configure basic traffic policy to allow traffic VNet to Internet
 ----------------------------------------------------------------------------------
 
 In this step, we will configure a basic traffic security policy that allows internet traffic to pass through the firewall. Given that Aviatrix gateways will only forward traffic to the LAN port of the Firewall, we simply set our policy condition to match any packet that is going in of LAN interface and going out of WAN interface.
@@ -172,20 +172,20 @@ You can view if traffic is forwarded to the firewall instance by logging in to t
 .. note::
     To view Forward Traffic logs under Logs & Report, go to Policy & Objects -> Firewall Policy -> Select a Policy and click Edit -> Logging Options -> Select All Sessions for Log Allowed Traffic.
 
-For VPC to VPC traffic:
+For VNet to VNet traffic:
 ***********************
 
-Launch one instance in PROD Spoke VPC and DEV Spoke VPC. Start ping packets from a instance in DEV Spoke VPC to the private IP of another instance in PROD Spoke VPC. The ICMP traffic should go through the firewall and be inspected in firewall.
+Launch one instance in PROD Spoke VNet and DEV Spoke VNet. Start ping packets from a instance in DEV Spoke VNet to the private IP of another instance in PROD Spoke VNet. The ICMP traffic should go through the firewall and be inspected in firewall.
 
 |az_fortigate_view_traffic_log_vpc_to_vpc|
 
 |az_fortigate_view_traffic_log_vpc_to_vpc_2|
 
 
-[Optional] For VPC to Internet traffic:
+[Optional] For VNet to Internet traffic:
 ***************************************
 
-Launch a private instance in the Spoke VPC (i.e. PROD Spoke VPC) and start ping packets from the private instance towards Internet (e.g 8.8.8.8) to verify the egress function. The ICMP traffic should go through, and get inspected on firewall.
+Launch a private instance in the Spoke VNet (i.e. PROD Spoke VNet) and start ping packets from the private instance towards Internet (e.g 8.8.8.8) to verify the egress function. The ICMP traffic should go through, and get inspected on firewall.
 
 .. important::
     The Egress Inspection is only applicable to all VNets that deploys non public facing applications. If you have any Spoke VNet that has public facing web services, you should not enable Egress Inspection. This is because Egress Inspection inserts a default route (0.0.0.0/0) towards Transit GW to send the Internet traffic towards firewall to get inspected. Azure's System Default Route pointing towards Internet will be overwritten by User-defined default route inserted by the Controller.
